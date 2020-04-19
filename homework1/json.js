@@ -31,3 +31,11 @@ var dogs =[
     { name: '두팔', family: '푸들', age: 7, weight: 3.1}
 ];
 
+console.log('dogs: ' + dogs);
+console.log('dogs :', dogs);
+console.log('dogs: '+JSON.stringify(dogs));
+
+dogs.forEach(
+    dog=> console.log(dog.name+'이는 종이 '+dog.family+'이고, 나이가 '+dog.age+'세 입니다~'
+    )
+);
