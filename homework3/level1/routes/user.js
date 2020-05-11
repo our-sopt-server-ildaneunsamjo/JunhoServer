@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 let Usermodel = require('../models/user');
 let util = require('../modules/util');
+let statusCode = require('../modules/statusCode');
+let responseMessage = require('../modules/responseMessage');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -18,7 +20,7 @@ router.post('/signup',async(req,res)=>{
 })
 */
 
-// 2단계
+// 2단계 - 에러처리, 에러메시지 객체로
 router.post('/signup',async(req,res)=>{
   const {id,name,password,email} = req.body;
   // request data 여부 확인
@@ -33,4 +35,37 @@ router.post('/signup',async(req,res)=>{
   res.status(200).send(util.success(200, '회원가입 성공!', {userId: id}));
 });
 
+router.post('/signin',async(req,res)=>{
+  //1. req의 body에서 data 받아오기
+  const{
+    id,
+    password
+  }=req.body;
+  //2. request data 확인(data가 제대로 들어왔는지 여부)
+  if(!id || !password){
+    res.status(statusCode.BAD_REQUEST)
+      .send(util.fail(statusCode.BAD_REQUEST,responseMessage.NULL_VALUE));
+    return;
+  }
+  //3. 존재하는 id인지 확인
+  const user = Usermodel.filter(user=>user.id == id);
+  // filter 함수 -> 주어진 콜백함수를 통과하는 요소들로 새로운 배열을 만듦, user라는 새로운 배열을 만듦
+  if(user.length == 0){
+    res.status(statusCode.BAD_REQUEST)
+      .send(util.fail(statusCode.BAD_REQUEST,responseMessage.NO_USER));
+    return;
+  }
+  //4. 존재하는 pw인지 확인
+  if(user[0].password !== password){
+    res.status(statusCode.BAD_REQUEST)
+      .send(util.fail(statusCode.BAD_REQUEST,responseMessage.MISS_MATCH_PW));
+    return;
+  } 
+  //5. 성공(login success와 함께 userId 반환)
+  res.status(statusCode.OK)
+    .send(util.success(statusCode.OK, responseMessage.LOGIN_SUCCESS, {userId,id}));
+});
+
+
+// router.get('/profile')
 module.exports = router;
