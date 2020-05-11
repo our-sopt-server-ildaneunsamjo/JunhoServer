@@ -65,7 +65,7 @@ router.post('/signin',async(req,res)=>{
   } 
   //5. 성공(login success와 함께 userId 반환)
   res.status(statusCode.OK)
-    .send(util.success(statusCode.OK, responseMessage.LOGIN_SUCCESS, {userId,id}));
+    .send(util.success(statusCode.OK, responseMessage.LOGIN_SUCCESS, {userId: id}));
 });
 
 // 프로필 조회
