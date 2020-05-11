@@ -35,6 +35,8 @@ router.post('/signup',async(req,res)=>{
   res.status(200).send(util.success(200, '회원가입 성공!', {userId: id}));
 });
 
+
+// 로그인 구현
 router.post('/signin',async(req,res)=>{
   //1. req의 body에서 data 받아오기
   const{
@@ -66,6 +68,25 @@ router.post('/signin',async(req,res)=>{
     .send(util.success(statusCode.OK, responseMessage.LOGIN_SUCCESS, {userId,id}));
 });
 
+// 프로필 조회
+router.get('/profile/:id', async (req, res) => {
+  // request params 에서 데이터 가져오기
+  const id = req.params.id;
+  const user = Usermodel.filter(user => user.id == id)[0];
+  // 존재하는 아이디인지 확인 - 없다면 No user 반환
+  if (user === undefined) {
+      res.status(statusCode.BAD_REQUEST)
+          .send(util.fail(statusCode.BAD_REQUEST, responseMessage.NO_USER));
+      return;
+  }
+  const result = {
+      id: user.id,
+      name: user.name,
+      email: user.email
+  }
+  // 성공 - login success와 함께 user Id 반환
+  res.status(statusCode.OK)
+      .send(util.success(statusCode.OK, responseMessage.READ_PROFILE_SUCCESS, result));
+});
 
-// router.get('/profile')
 module.exports = router;
