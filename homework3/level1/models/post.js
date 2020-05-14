@@ -1,7 +1,7 @@
 module.exports = [
     {
         id: "juno1234",
-        author: "juno",
-        name: "homework"
+        name: "homework",
+        content:"시리야 오늘 날씨알려죠"
     }
 ];

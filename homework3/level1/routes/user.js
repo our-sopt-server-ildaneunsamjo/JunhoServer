@@ -88,10 +88,4 @@ router.get('/profile/:id', async (req, res) => {
       .send(util.success(statusCode.OK, responseMessage.READ_PROFILE_SUCCESS, result));
 });
 
-router.get('/debug',(req,res)=>{
-  console.log(req.params);
-  console.log(req.query);
-  console.log(req.body);
-  res.send("HI")
-});
 module.exports = router;

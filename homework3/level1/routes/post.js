@@ -18,38 +18,69 @@ router.get('/:id',async(req,res)=>{
             .send(util.fail(statusCode.BAD_REQUEST, responseMessage.NO_USER));
         return;
     }
-
     const result= {
         id: post.id,
-        author: post.author,
-        name: post.name
+        name: post.name,
+        content: post.content
     }
     res.status(statusCode.OK)
-        .send(util.success(statusCode.OK,responseMessage.LOGIN_SUCCESS,result));
+        .send(util.success(statusCode.OK,responseMessage.READ_POST_SUCESS,result));
 });
 
-router.post('/post',async(req,res)=>{
-    const {id,author,name} = req.body;
+router.post('/',async(req,res)=>{
+  const {id,author,name} = req.body;
   // request data 여부 확인
-  if(!id || !name || !author){
-    return res.status(400).send(util.fail(400,'BAD REQUSET'));
+  if(!id || !name || !content){
+    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST,'BAD REQUSET'));
   }
   // already data 여부 확인
   if(Post.filter(iter => iter.id == id).length>0){
-    return res.status(400).send(util.fail(400,'ALREADY ID'));
+    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST,'ALREADY ID'));
   }
-  const newpost ={id,author,name};
+  const newpost ={id,name,content};
 
   Post.push(newpost);
-  res.status(200).send(util.success(200, '게시글 생성 완료!', newpost));
+  res.status(statusCode.OK).send(util.success(statusCode.OK,responseMessage.POST_SUCCESS, newpost));
 });
 
-router.put('/post/:id',async(req,res)=>{
+router.put('/:id',async(req,res)=>{
+  const id = req.params.id;
+  const {name,content} = req.body;
+  
+  if(!id || !name || !content){
+    return res.status(statusCode.BAD_REQUEST)
+    .send(util.fail(statusCode.BAD_REQUEST,responseMessage.NULL_VALUE));
+  }
 
+  for(var i in Post){
+    if(Post[i].id === id){
+      Post[i].name = name;
+      Post[i].content = content;
+
+      res.status(statusCode.OK)
+      .send(util.success(statusCode.OK,responseMessage.UPDATE_POST_SUCESS,Post[i]));
+    }
+  }
+  res.status(statusCode.BAD_REQUEST,responseMessage.UPDATE_POST_FAIL);
 });
 
-router.delete('/post/:id',async(req,res)=>{
-    
-});
+router.delete('/:id',async(req,res)=>{
+    const id = req.params.id;
 
+    if(!id){
+      res.status(statusCode.BAD_REQUEST)
+      .send(util.fail(statusCode.BAD_REQUEST,responseMessage.NULL_VALUE));
+    }
+    for(var i in Post){
+      if(Post[i].id === id){
+        Post[i].splice(i,1);
+        res.status(statusCode.OK)
+        .send(util.success(statusCode.OK,responseMessage.DELETE_POST_SUCESS,{deleteId: id}));
+      }
+    }
+    res.status(statusCode.BAD_REQUEST)
+    .send(statusCode.BAD_REQUEST,responseMessage.DELETE_POST_FAIL);
+});
+// 1. delete 해서 요소 지우고, filter로 null 값인 것을 걸러내서 새로 배열에 추가
+// 2. splice 로 지우기
 module.exports = router;
