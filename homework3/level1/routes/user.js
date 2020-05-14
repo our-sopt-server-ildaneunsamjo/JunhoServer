@@ -7,20 +7,10 @@ let responseMessage = require('../modules/responseMessage');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+  res.send('welcome to user page!');
 });
-/* 1단계 - 에러처리 x
-router.post('/signup',async(req,res)=>{
-  const {id,name,password,email}= req.body;
-  // 1. signup 페이지 body에서 id,name,password,email을 받아온다
-  Usermodel.push({id,name,password,email});
-  // 2. Usermodel에(../models/user 안에) 받아온다. 
-  res.status(200).send(Usermodel);
-  // 3. 성공한 상태와 동시에 Usermodel을 응답(res)으로 내보낸다.
-})
-*/
 
-// 2단계 - 에러처리, 에러메시지 객체로
+// 회원가입 2단계 - 에러처리, 에러메시지 객체로
 router.post('/signup',async(req,res)=>{
   const {id,name,password,email} = req.body;
   // request data 여부 확인
@@ -31,10 +21,15 @@ router.post('/signup',async(req,res)=>{
   if(Usermodel.filter(user => user.id == id).length>0){
     return res.status(400).send(util.fail(400,'ALREADY ID'));
   }
-  Usermodel.push({id,name,password,email});
-  res.status(200).send(util.success(200, '회원가입 성공!', {userId: id}));
+  const hashed = await encrypt(password);
+  Usermodel.push({id,name,hashed,email});
+  res.status(200).send(util.success(200, '회원가입!', 
+  {
+    userId: id,
+    userpw: hashed
+  }
+  ));
 });
-
 
 // 로그인 구현
 router.post('/signin',async(req,res)=>{
@@ -89,4 +84,10 @@ router.get('/profile/:id', async (req, res) => {
       .send(util.success(statusCode.OK, responseMessage.READ_PROFILE_SUCCESS, result));
 });
 
+router.get('/debug',(req,res)=>{
+  console.log(req.params);
+  console.log(req.query);
+  console.log(req.body);
+  res.send("HI")
+});
 module.exports = router;
