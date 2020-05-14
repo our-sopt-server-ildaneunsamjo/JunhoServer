@@ -3,6 +3,7 @@
 ## ☘Project Link
 * [Homework#1](https://github.com/our-sopt-server-ildaneunsamjo/JunhoServer/tree/master/homework1)
 * [Homework#2](https://github.com/our-sopt-server-ildaneunsamjo/JunhoServer/tree/master/homework2)
+* [Homework#3](https://github.com/our-sopt-server-ildaneunsamjo/JunhoServer/tree/master/homework3/level1)
 
 ## 🤔How to use EXPRESS
 
