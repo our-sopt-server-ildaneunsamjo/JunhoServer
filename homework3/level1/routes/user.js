@@ -4,6 +4,7 @@ let Usermodel = require('../models/user');
 let util = require('../modules/util');
 let statusCode = require('../modules/statusCode');
 let responseMessage = require('../modules/responseMessage');
+let encrypt = require('../modules/encrypt');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -21,9 +22,12 @@ router.post('/signup',async(req,res)=>{
   if(Usermodel.filter(user => user.id == id).length>0){
     return res.status(400).send(util.fail(400,'ALREADY ID'));
   }
-  const hashed = await encrypt(password);
+
+  const salt = encrypt.makesalt();
+  const hashed = await encrypt.encrypt(password,salt);
+
   Usermodel.push({id,name,hashed,email});
-  res.status(200).send(util.success(200, '회원가입!', 
+  res.status(200).send(util.success(200, '회원가입 성공!', 
   {
     userId: id,
     userpw: hashed
