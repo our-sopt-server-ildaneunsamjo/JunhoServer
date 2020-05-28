@@ -35,7 +35,7 @@ const user = {
         } catch (err) {
             if (err.errno == 1062) {
                 console.log('signup ERROR : ', err.errno, err.code);
-                throw err;
+                return -1;
             }
             console.log('signup ERROR : ', err);
             throw err;
@@ -57,9 +57,18 @@ const user = {
             throw err;
         }
     },
+    signin: async (id,password)=>{},
     getUserById: async (id) => {
         // query문 작성
-        // pool module로 전달해서 결과값 받기
+        const query = `SELECT * FROM ${table} WHERE id ="${id}"`;
+        try{
+            // pool module로 전달해서 결과값 받기
+            const result = await pool.queryParam(query);
+            return result;
+        } catch(err){
+            console.log('getUserById ERROR : ',err);
+            throw err;
+        }
         // try - catch로 ERROR 받기
     },
 }
