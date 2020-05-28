@@ -20,6 +20,7 @@
 // ];
 
 const pool = require('../modules/pool');
+const crypto = require('../modules/encrypt');
 const table = 'user';
 
 const user = {
@@ -57,7 +58,23 @@ const user = {
             throw err;
         }
     },
-    signin: async (id,password)=>{},
+    signin: async (id,password)=>{
+        const query = `SELECT * FROM ${table} WHERE id = "${id}"`;
+        try{
+            const result = await pool.queryParam(query);
+            const user = result[0];
+            const salt = user.salt; // userdb에서 접근한 salt
+            const hashed = await crypto.encrypt(password,salt);
+            if(user.password === hashed){
+                return result;
+            }else{
+                return false;
+            }
+        } catch(err){
+            console.log('signin ERROR :',err);
+            throw err;
+        }
+    },
     getUserById: async (id) => {
         // query문 작성
         const query = `SELECT * FROM ${table} WHERE id ="${id}"`;
