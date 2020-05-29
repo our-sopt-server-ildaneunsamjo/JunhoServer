@@ -22,5 +22,8 @@ module.exports = {
     UPDATE_POST_SUCESS: "게시글 수정 성공",
     UPDATE_POST_FAIL: "게시글 수정 실패",
     DELETE_POST_SUCESS: "게시글 삭제 성공",
-    DELETE_POST_FAIL: "게시글 삭제 실패"
+    DELETE_POST_FAIL: "게시글 삭제 실패",
+
+    NO_POST: "존재하지 않는 게시글 입니다.",
+    NO_ID: "존재하지 않는 아이디 입니다.",
 };

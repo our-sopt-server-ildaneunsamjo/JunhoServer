@@ -21,24 +21,12 @@ router.post('/signup',async(req,res)=>{
     return res.status(statusCode.BAD_REQUEST)
       .send(util.fail(statusCode.BAD_REQUEST,responseMessage.NULL_VALUE));
   }
-  // already data 여부 확인 - Usermodel 사용한 경우
-  // if(Usermodel.filter(user => user.id == id).length>0){
-  //   return res.status(400).send(util.fail(400,'ALREADY ID'));
-  // }
+  
   if(await User.checkUser(id)){
     return res.status(statusCode.BAD_REQUEST)
       .send(util.fail(statusCode.BAD_REQUEST,responseMessage.ALREADY_ID));
   }
-  // 암호화 후 usermodel에 저장 - Usermodel 사용한 경우
-  // const salt = encrypt.makesalt();
-  // const hashed = await encrypt.encrypt(password,salt);
-  // Usermodel.push({id,name,hashed,email});
-  // res.status(200).send(util.success(200, '회원가입 성공!', 
-  // {
-  //   userId: id,
-  //   userpw: hashed
-  // }
-  // ));
+  
   const salt = encrypt.makesalt();
   const hashed = await encrypt.encrypt(password,salt);
   const index = User.signup(id,name,hashed,salt,email);
@@ -77,24 +65,6 @@ router.post('/signin',async(req,res)=>{
   // 로그인 성공
   return res.status(statusCode.OK)
     .send(util.success(statusCode.OK,responseMessage.LOGIN_SUCCESS,{userId: id}));
-    
-  // //3. 존재하는 id인지 확인
-  // const user = Usermodel.filter(user=>user.id == id);
-  // // filter 함수 -> 주어진 콜백함수를 통과하는 요소들로 새로운 배열을 만듦, user라는 새로운 배열을 만듦
-  // if(user.length == 0){
-  //   res.status(statusCode.BAD_REQUEST)
-  //     .send(util.fail(statusCode.BAD_REQUEST,responseMessage.NO_USER));
-  //   return;
-  // }
-  // //4. 존재하는 pw인지 확인
-  // if(user[0].password !== password){
-  //   res.status(statusCode.BAD_REQUEST)
-  //     .send(util.fail(statusCode.BAD_REQUEST,responseMessage.MISS_MATCH_PW));
-  //   return;
-  // } 
-  // //5. 성공(login success와 함께 userId 반환)
-  // res.status(statusCode.OK)
-  //   .send(util.success(statusCode.OK, responseMessage.LOGIN_SUCCESS, {userId: id}));
 });
 
 // 프로필 조회
@@ -120,21 +90,6 @@ router.get('/profile/:id', async (req, res) => {
       userName : user.name,
       userEmail : user.email,
     }));
-  // const user = Usermodel.filter(user => user.id == id)[0];
-  // // 존재하는 아이디인지 확인 - 없다면 No user 반환
-  // if (user === undefined) {
-  //     res.status(statusCode.BAD_REQUEST)
-  //         .send(util.fail(statusCode.BAD_REQUEST, responseMessage.NO_USER));
-  //     return;
-  // }
-  // const result = {
-  //     id: user.id,
-  //     name: user.name,
-  //     email: user.email
-  // }
-  // // 성공 - login success와 함께 user Id 반환
-  // res.status(statusCode.OK)
-  //     .send(util.success(statusCode.OK, responseMessage.READ_PROFILE_SUCCESS, result));
 });
 
 module.exports = router;

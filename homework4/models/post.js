@@ -17,6 +17,7 @@ const post ={
             throw err;
         }
     },
+    // (2) 게시글 조회(전체)
     postSearchAll: async()=>{
         const query = `SELECT * FROM ${table}`;
         try{
@@ -27,7 +28,7 @@ const post ={
             throw err;
         }
     },
-    // (2)게시글 조회(by id)
+    // (3)게시글 조회(by id)
     postSearch: async(postidx)=>{
         const query = `SELECT * FROM ${table} WHERE postIdx="${postidx}"`;
         try{
@@ -38,7 +39,7 @@ const post ={
             throw err;
         }
     },
-    // (3)게시글 생성
+    // (4)게시글 생성
     postCreate: async(postidx, author, title, content, createdAt)=>{
         const fields = 'postidx, author, title, content, createdAt';
         const questions =`?, ?, ?, ?, ?`;
@@ -57,7 +58,7 @@ const post ={
             throw err;
         }
     },
-    // (4)게시글 수정
+    // (5)게시글 수정
     postUpdate: async(postidx,title,content,createdAt)=>{
         // UPDATE table SET col1=val1, col2=val2 WHERE 조건;
         const fields = `title=?, content=?, createdAt=?`;
@@ -71,7 +72,7 @@ const post ={
             throw err;
         }
     },
-    // (5)게시글 삭제
+    // (6)게시글 삭제
     postDelete: async(postidx) =>{
         const query = `DELETE FROM ${table} WHERE ="${postidx}"`;
         try{
