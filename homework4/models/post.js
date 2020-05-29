@@ -2,7 +2,7 @@ const pool = require('../modules/pool');
 const table = 'post';
 
 const post ={
-    // checkPost
+    // (1)checkPost
     checkPost: async (postidx) =>{
         const query = `SELECT * FROM ${table} WHERE postIdx = "${postidx}"`;
         try{
@@ -17,7 +17,17 @@ const post ={
             throw err;
         }
     },
-    // 게시글 조회(by id)
+    postSearchAll: async()=>{
+        const query = `SELECT * FROM ${table}`;
+        try{
+            const result = await pool.queryParam(query);
+            return result;
+        } catch(err){
+            console.log('postSearchAll ERROR : ',err);
+            throw err;
+        }
+    },
+    // (2)게시글 조회(by id)
     postSearch: async(postidx)=>{
         const query = `SELECT * FROM ${table} WHERE postIdx="${postidx}"`;
         try{
@@ -28,7 +38,7 @@ const post ={
             throw err;
         }
     },
-    // 게시글 생성
+    // (3)게시글 생성
     postCreate: async(postidx, author, title, content, createdAt)=>{
         const fields = 'postidx, author, title, content, createdAt';
         const questions =`?, ?, ?, ?, ?`;
@@ -47,7 +57,7 @@ const post ={
             throw err;
         }
     },
-    // 게시글 수정
+    // (4)게시글 수정
     postUpdate: async(postidx,title,content,createdAt)=>{
         // UPDATE table SET col1=val1, col2=val2 WHERE 조건;
         const fields = `title=?, content=?, createdAt=?`;
@@ -61,7 +71,7 @@ const post ={
             throw err;
         }
     },
-    // 게시글 삭제
+    // (5)게시글 삭제
     postDelete: async(postidx) =>{
         const query = `DELETE FROM ${table} WHERE ="${postidx}"`;
         try{
