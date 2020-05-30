@@ -6,6 +6,7 @@ let util = require('../modules/util');
 let statusCode = require('../modules/statusCode');
 let responseMessage = require('../modules/responseMessage');
 let encrypt = require('../modules/encrypt');
+const jwt = require('../modules/jwt');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
